@@ -21,7 +21,6 @@ public class ChatClient2 {
             System.out.print("Enter your nickname: ");
             String nickname = stdIn.nextLine();
             out.println(nickname); // 서버에 닉네임을 전송
-
             // 서버로부터 메시지를 읽어 화면에 출력하는 별도의 스레드
             Thread readThread = new Thread(new ServerMessageReader(in));
             readThread.start(); // 메시지 읽기 스레드 시작

@@ -15,17 +15,17 @@ public class chatTread extends Thread {
     private PrintWriter out; // 값을 써서 클라이언트에게 보낼 통로
     private InetAddress ip; // 사용자 ip
     private List<String> member; // 같은 방에 속한 멤버 이름 리스트
-    private List<String> chatHistory = new ArrayList<>();  // 채팅 내역 저장 io
-
+    private List<String> chatHistory = new ArrayList<>();// 채팅 내역 저장 리스트
 
 
     // 생성자 - 초기화 담당
-    public chatTread(Socket client, Map<String, PrintWriter> userList, Map<String, Integer> userRoom, List<String> member, int roomNumber) {
+    public chatTread(Socket client, Map<String, PrintWriter> userList, Map<String, Integer> userRoom, List<String> member,List<String> chatHistory, int roomNumber) {
         this.client = client;
         this.userList = userList;
         this.roomNumber = roomNumber;
         this.userRoom = userRoom;
         this.member = member;
+        this.chatHistory = chatHistory;
         // 클라이언트 생성시 클라이언트로부터 id 얻기
         try {
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -39,19 +39,19 @@ public class chatTread extends Thread {
     @Override
     public void run() {
         while(nickName()){
-            out.println("해당 닉네임은 이미 사용중입니다. \nEnter your nickname");
+            out.println("해당 닉네임은 이미 사용중입니다. 닉네임을 다시 입력해주세요.");
         }
         System.out.println("[ " + name + " ] 닉네임의 사용자가 연결했습니다.");
         // 사용자 소켓을 이용하여 ip 받아오기
         ip = client.getInetAddress();
-        System.out.println("사용자 IP 주소 : " + ip.getHostAddress());
+        System.out.println( name +" 사용자 IP 주소 : " + ip.getHostAddress());
 
         // 클라이언트가 접속시 "명령어 모음" 보내기
         out.println("\u001B[33m" +
                 "+--------------------------------+\n" +
-                "| 방 목록 보기 : /list             |\n" +
-                "| 방 생성 : /create               |\n" +
-                "| 방 입장 : /join [방번호]         |\n" +
+                "| 방 목록 보기 : /list              |\n" +
+                "| 방 생성 : /create                |\n" +
+                "| 방 입장 : /join [방번호]          |\n" +
                 "| 방 나가기 : /exit                |\n" +
                 "| 접속 종료 : /bye                 |\n" +
                 "| 로그인 접속자 보기 : /users       |\n" +
@@ -141,11 +141,10 @@ public class chatTread extends Thread {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("[ " + name + " ] 닉네임의 사용자가 연결을 끊었습니다..");
         } finally {
             synchronized (userList) {
                 userList.remove(name);
-                System.out.println("[ " + name + " ] 닉네임의 사용자가 연결을 끊었습니다..");
             }
             if (in != null) {
                 try {
@@ -162,6 +161,22 @@ public class chatTread extends Thread {
                 }
             }
         }
+    }
+    // 닉네임 출력 + 중복 확인
+    public boolean nickName(){
+        boolean same = false;
+        try{
+            name = in.readLine();
+            if(userList.containsKey(name)){
+                same =  true;
+            }else{
+                out.println("닉네임 설정이 완료되었습니다.");
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return same;
     }
 
     // 같은 방에 있는 멤버 추려내기
@@ -242,21 +257,5 @@ public class chatTread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    // 닉네임 출력 + 중복 확인
-    public boolean nickName(){
-        boolean same = false;
-        try{
-            name = in.readLine();
-            if(userList.containsKey(name)){
-                same =  true;
-            }else{
-                out.println("닉네임 설정이 완료되었습니다.");
-
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return same;
     }
 }
