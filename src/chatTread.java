@@ -35,6 +35,7 @@ public class chatTread extends Thread {
         }
     } // 생성자
 
+
     // 멀티 스레드 동작
     @Override
     public void run() {
@@ -99,8 +100,9 @@ public class chatTread extends Thread {
                         boolean empty = ChatFunctional.exit(roomNumber);
                         if (!empty) {
                             out.println(roomNumber + "번 방이 삭제되었습니다");
+                        }else{
+                            broadcast("[ " + name + " ] 님이 방을 나갔습니다.");
                         }
-                        broadcast("[ " + name + " ] 님이 방을 나갔습니다.");
                         roomNumber = 0; // 로비(구현 x)
                         sleep(1000);
                         out.println("\u001B[33m" +

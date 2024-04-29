@@ -42,6 +42,7 @@ public class ChatFunctional {
     // 기능 3. 방 입장
     public static void join(Map<String,Integer> userRoom, String name , int roomNumber){
         userRoom.put(name,roomNumber);
+        room.add(roomNumber);
     }
     // 기능 4. 방 나가기
     public static boolean exit(int roomNumber){
