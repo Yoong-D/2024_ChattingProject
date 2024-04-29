@@ -9,8 +9,8 @@ public class chatTread extends Thread {
     private Socket client; // 사용자 소켓
     private String name; // 사용자 닉네임
     private int roomNumber; // 사용자가  속한 방 번호
-    private Map<String, Integer> userRoom; // 클라이언트 리스트를 키로, 해당 방 번호를 값으로 설정하는 이중 맵
-    private Map<String, PrintWriter> userList; // 클라이언트 리스트 <내부 맵>
+    private Map<String, Integer> userRoom; // 이름 - 해당 멤버가 속한 방 번호 io 맵
+    private Map<String, PrintWriter> userList; // 이름  - 출력 io 맵
     private BufferedReader in; // 사용자 출력값 읽어오는 통로
     private PrintWriter out; // 값을 써서 클라이언트에게 보낼 통로
     private InetAddress ip; // 사용자 ip
